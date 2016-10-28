@@ -1,0 +1,38 @@
+<top_nav [current_user]=current_user></top_nav>
+<div *ngIf="ticket">
+	<div class='col-md-12'><h2>Ticket #{{ticket.id}} <span class="badge">{{ticket.status_str}}</span></h2></div>
+	<div class='col-md-12'>
+		<button class="btn btn-default btn-sm" (click)="backToList()"><span class="glyphicon glyphicon-chevron-left"></span> back</button>
+		<span *ngIf="ticket.status_str != 'closed'">
+			<button class="btn btn-info btn-sm" (click)="editTicket()"><span class="glyphicon glyphicon-edit"></span> edit</button>
+			<button *ngIf="current_user.role == 'support_agent' && current_user.email != ticket.owner_email" class="btn btn-primary btn-sm" (click)="assignTicket(current_user)"><span class="glyphicon glyphicon-check"></span> assign to me</button>
+			<div class="btn-group" *ngIf="current_user.role == 'admin'">
+				<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="showAssignToMenu=!showAssignToMenu">
+					<span class="glyphicon glyphicon-share"></span> assign to <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" [ngClass]="{'show':showAssignToMenu}">
+					<li *ngFor=" let u of users"><a (click)="showAssignToMenu=false;assignTicket(u)">{{u.email}}</a></li>
+				</ul>
+			</div>
+			<button class="btn btn-danger btn-sm" (click)="closeTicket()"><span class="glyphicon glyphicon-remove"></span> close</button>
+		</span>
+		<button *ngIf="ticket.status_str == 'closed'" class="btn btn-warning btn-sm" (click)="reopenTicket()"><span class="glyphicon glyphicon-repeat"></span> reopen</button>
+		<button *ngIf="current_user.role == 'admin'" class="btn btn-danger btn-sm" (click)="deleteTicket()"><span class="glyphicon glyphicon-trash"></span> remove</button>
+	</div>
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">{{ticket.title}}</h3>
+			</div>
+			<div class="panel-body">
+				{{ticket.description}}
+				<br />
+				<span class="label label-default">{{ticket.created_at | date}} by {{ticket.user_email}}</span>
+			</div>
+		</div>
+		<div *ngIf="ticket.owner_email">
+			<span class="label label-default">Assigned to {{ticket.owner_email}}</span>
+		</div>
+		<comments [ticket_id]="ticket.id"></comments>
+	</div>
+</div>

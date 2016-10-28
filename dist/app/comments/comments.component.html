@@ -1,0 +1,11 @@
+<h3>Comments</h3>
+<div class="panel panel-default" *ngFor="let comment of comments">
+  <div class="panel-body">
+	{{comment.body}}
+	<br />
+	<span class="label label-default">{{comment.created_at | date}} by {{comment.user_email}}</span>
+	<button *ngIf="current_user.role == 'admin'" class="btn btn-danger btn-sm" (click)="deleteComment(comment.id)"><span class="glyphicon glyphicon-trash"></span> remove</button>
+  </div>
+</div>
+<textarea class="form-control" rows="3" placeholder="Type your comment here" [(ngModel)]="new_comment" name="body"></textarea>
+<button class="btn btn-primary" (click)="addComment()"><span class="glyphicon glyphicon-plus"></span> add</button>

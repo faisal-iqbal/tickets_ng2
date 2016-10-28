@@ -1,0 +1,17 @@
+<top_nav [current_user]=current_user></top_nav>
+<div class='col-md-12'><h2>Tickets</h2></div>
+<div class="col-md-12">
+	<form (ngSubmit)="submitTicket()">
+		<div class="form-group">
+			<input type="text" class="form-control" placeholder="Title" [(ngModel)]="model.title" name="title" required maxLength='255'>
+		</div>
+		<div class="form-group">
+			<textarea class="form-control" rows="3" placeholder="Description" [(ngModel)]="model.description" name="description"></textarea>
+		</div>
+		<div class="actions">
+			<button *ngIf="!editing" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> add</button>
+			<button *ngIf="editing" type="submit" class="btn btn-warning"><span class="glyphicon glyphicon-floppy-disk"></span> save</button>
+			<a (click)="cancelForm()" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span> cancel</a>
+		</div>
+	</form>
+</div>

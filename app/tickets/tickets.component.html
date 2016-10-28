@@ -1,0 +1,50 @@
+<top_nav [current_user]=current_user></top_nav>
+<div class='col-md-12'><h2>Tickets</h2></div>
+<div class='col-md-6'>
+	<button class='btn btn-default' (click)="newTicket()">
+		<span class="glyphicon glyphicon-plus"></span> New Ticket
+	</button>
+</div>
+<div class='col-md-6'>
+	<a href="{{report_pdf_url}}" target='_blank' *ngIf = "report_pdf_url">
+		<span class="glyphicon glyphicon-save-file"></span> Report for closed tickets in last month
+	</a>
+</div>
+<div class='col-md-12'>
+	<table class="table table-striped table-condensed table-responsive">
+		<thead>
+			<tr>
+				<th>Title</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let ticket of tickets">
+				<td>
+					{{ticket.title}}
+					<div *ngIf="ticket.owner_email">
+						<span class="label label-default">Assigned to {{ticket.owner_email}}</span>
+					</div>
+					<br />
+					<button class="btn btn-default btn-sm" (click)="showTicket(ticket)"><span class="glyphicon glyphicon-folder-open"></span> show</button>
+					<span *ngIf="ticket.status_str != 'closed'">
+						<button class="btn btn-info btn-sm" (click)="editTicket(ticket)"><span class="glyphicon glyphicon-edit"></span> edit</button>
+						<button *ngIf="current_user.role == 'support_agent' && current_user.email != ticket.owner_email" class="btn btn-primary btn-sm" (click)="assignTicket(ticket, current_user)"><span class="glyphicon glyphicon-check"></span> assign to Me</button>
+						<div class="btn-group" *ngIf="current_user.role == 'admin'">
+						  <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="showAssignToMenu[ticket.id]=!showAssignToMenu[ticket.id]">
+							<span class="glyphicon glyphicon-share"></span> assign to <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu" [ngClass]="{'show':showAssignToMenu[ticket.id]}">
+							<li *ngFor=" let u of users"><a (click)="showAssignToMenu[ticket.id]=false;assignTicket(ticket, u)">{{u.email}}</a></li>
+						  </ul>
+						</div>
+						<button class="btn btn-danger btn-sm" (click)="closeTicket(ticket.id)"><span class="glyphicon glyphicon-remove"></span> close</button>
+					</span>
+					<button *ngIf="ticket.status_str == 'closed'" class="btn btn-warning btn-sm" (click)="reopenTicket(ticket.id)"><span class="glyphicon glyphicon-repeat"></span> reopen</button>
+					<button *ngIf="current_user.role == 'admin'" class="btn btn-danger btn-sm" (click)="deleteTicket(ticket.id)"><span class="glyphicon glyphicon-trash"></span> remove</button>
+				</td>
+				<td>{{ticket.status_str}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

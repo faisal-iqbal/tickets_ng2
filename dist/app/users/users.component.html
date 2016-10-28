@@ -1,0 +1,30 @@
+<top_nav [current_user]=current_user></top_nav>
+<div class='col-md-12'><h2>Users</h2></div>
+<div class='col-md-12'>
+	<button class='btn btn-default' (click)="newUser()">
+		<span class="glyphicon glyphicon-plus"></span> New User
+	</button>
+</div>
+<div class='col-md-12'>
+	<table class="table table-striped table-condensed table-responsive">
+		<thead>
+			<tr>
+				<th>Email</th>
+				<th>Role</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let user of users">
+				<td>
+					{{user.email}}
+					<br />
+					<button class="btn btn-default btn-sm" (click)="editUser(user)"><span class="glyphicon glyphicon-edit"></span> edit</button>
+					<button *ngIf="user.role != 'support_agent' && user.role != 'admin'" class="btn btn-primary btn-sm" (click)="makeSupportAgent(user, true)"><span class="glyphicon glyphicon-edit"></span> make support agent</button>
+					<button *ngIf="user.role == 'support_agent' && user.role != 'admin'" class="btn btn-primary btn-sm" (click)="makeSupportAgent(user, false)"><span class="glyphicon glyphicon-edit"></span> make normal user</button>
+					<button *ngIf="user.role != 'admin'" class="btn btn-danger btn-sm" (click)="deleteUser(user)"><span class="glyphicon glyphicon-trash"></span> remove</button>
+				</td>
+				<td>{{user.role}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
